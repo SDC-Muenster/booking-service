@@ -83,11 +83,37 @@ const saveHotelToUser = (userName, houseName, totalPrice) => {
   });
 };
 
+
+const deleteHouse = (id, callback) => {
+  Hotel.deleteMany({ id }, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+
+    console.log('Succesful Deletion', result);
+    callback(null);
+  });
+};
+
+
+const updateHouse = (id, { name, initialPrice, cleaning, service, taxes, price_per_guest, unavailable_dates }, callback) => {
+  //omitUndefined set to true, so if some of the values are undefined, then keep what is already stored in database
+  Hotel.update({id}, {name, initialPrice, cleaning, service, taxes, price_per_guest, unavailable_dates}, { omitUndefined: true }, (err, result) => {
+    if (err) {
+      callback(err, null);
+    }
+    console.log('Document updated', result);
+    callback(null, result);
+  })
+}
+
 module.exports.getUsers = getUsers;
 module.exports.saveHotelToUser = saveHotelToUser;
 module.exports.saveUser = saveUser;
 module.exports.getHouses = getHouses;
 module.exports.getHouseById = getHouseById;
 module.exports.saveHouse = saveHouse;
+module.exports.deleteHouse = deleteHouse;
+module.exports.updateHouse = updateHouse;
 
 // changed
