@@ -60,16 +60,16 @@ app.delete('/api/houses/:id', (req, res) => {
     if (err) {
       res.send('Error occured deleting id');
     }
-    res.status(200).send('');
+    res.status(202).end();
   });
 });
 
 app.put('/api/houses/:id', (req, res) => {
   models.updateHouse(req.params.id, req.body, (err, results) => {
     if (err) {
-      res.status(404).send('Error updating user');
+      res.status(500).send('Error updating user');
     }
-    res.status(200).send('');
+    res.status(201).end();
   });
 });
 
