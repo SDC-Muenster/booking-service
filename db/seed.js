@@ -32,7 +32,7 @@ const seed = () => {
 
 writer.pipe(fs.createWriteStream(`${__dirname}/house.csv`));
 
-let i = 100;
+let i = 10000000;
 function write() {
   let ok = true;
   do {
@@ -41,6 +41,7 @@ function write() {
       writer.write(seed());
       console.log('done writing');
       writer.end();
+      console.timeEnd('write');
     } else {
       ok = writer.write(seed());
     }
@@ -49,5 +50,6 @@ function write() {
     writer.once('drain', write);
   }
 }
+console.time('write');
 write();
 // seed();
