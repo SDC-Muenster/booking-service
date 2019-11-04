@@ -55,6 +55,24 @@ app.put('/api/users/:house', (req, res) => {
   res.end('worked');
 });
 
+app.delete('/api/houses/:id', (req, res) => {
+  models.deleteHouse(req.params.id, (err) => {
+    if (err) {
+      res.send('Error occured deleting id');
+    }
+    res.status(202).end();
+  });
+});
+
+app.put('/api/houses/:id', (req, res) => {
+  models.updateHouse(req.params.id, req.body, (err, results) => {
+    if (err) {
+      res.status(500).send('Error updating user');
+    }
+    res.status(201).end();
+  });
+});
+
 app.listen(port, () => { console.log(`Listening on port ${port}!`); });
 
 // changed
