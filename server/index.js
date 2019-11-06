@@ -6,7 +6,9 @@ const port = 3006;
 const parser = require('body-parser');
 const models = require('./models/index.js');
 
-const db = require('../db');
+// const db = require('../db');
+// const db = require('../cassandra');
+
 
 app.use(parser.json());
 app.use(express.static(`${__dirname}/../public`));
@@ -25,7 +27,7 @@ app.use('/api/test/:id', async (req, res) => {
   const { id } = req.params.id;
   const { rows } = await db.query('SELECT * FROM users WHERE id = $1', [id]);
   res.send(rows[0]);
-})
+});
 
 app.get('/api/houses/:id', (req, res) => {
   models.getHouseById(req.params.id, (err, results) => {

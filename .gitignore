@@ -24,3 +24,4 @@ coverage
 build/
 dist/booking.bundle.js
 db/house.csv
+cassandra/house.csv

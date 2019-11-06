@@ -3,8 +3,10 @@ const csvWriter = require('csv-write-stream');
 
 const writer = csvWriter();
 const fs = require('fs');
-const generator = require('../server/seed/randDay.js');
+// const generator = require('../server/seed/randDay.js');
+const generator = require('./randDay.js');
 
+let i = 10000000;
 const seed = () => {
   const name = `${faker.lorem.word()} House`;
 
@@ -13,16 +15,16 @@ const seed = () => {
   const services = Math.floor(Math.random() * 50);
   const taxes = Math.floor(Math.random() * 70);
 
-  generator.generateArray();
+  // generator.generateArray();
 
   return {
-    name, initialPrice, cleaning, services, taxes, unavailable_dates: generator.dateArray.pop(),
+    i, name, initialPrice, cleaning, services, taxes, unavailable_dates: generator.generateDate(),
   };
 };
 
 writer.pipe(fs.createWriteStream(`${__dirname}/house.csv`));
 
-let i = 10000000;
+
 function write() {
   let ok = true;
   do {
