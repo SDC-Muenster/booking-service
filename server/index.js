@@ -4,7 +4,7 @@ const app = express();
 const port = 3006;
 
 const parser = require('body-parser');
-const models = require('./models/index.js');
+const models = require('../db/index.js');
 
 // const db = require('../db');
 // const db = require('../cassandra');
@@ -13,25 +13,11 @@ const models = require('./models/index.js');
 app.use(parser.json());
 app.use(express.static(`${__dirname}/../public`));
 
-app.get('/api/houses', (req, res) => {
-  models.getHouses((err, results) => {
-    try {
-      res.send(results);
-    } catch (err) {
-      console.error(err);
-    }
-  });
-});
-
-app.use('/api/test/:id', async (req, res) => {
-  const { id } = req.params.id;
-  const { rows } = await db.query('SELECT * FROM users WHERE id = $1', [id]);
-  res.send(rows[0]);
-});
 
 app.get('/api/houses/:id', (req, res) => {
   models.getHouseById(req.params.id, (err, results) => {
     try {
+      results.rows[0].unavailable_dates = results.rows[0].unavailable_dates.split(',');
       res.send(results);
     } catch (err) {
       console.error(err);
@@ -39,30 +25,17 @@ app.get('/api/houses/:id', (req, res) => {
   });
 });
 
-app.get('/api/users', (req, res) => {
-  models.getUsers((err, results) => {
-    try {
-      res.send(results);
-    } catch (err) {
-      console.error(err);
-    }
-  });
-});
 
 app.post('/api/houses', (req, res) => {
-  models.saveHouse(req.body.id, req.body.name, req.body.initialPrice, req.body.cleaning, req.body.service, req.body.taxes, req.body.availableDates, req.body.pricePerGuest);
-  res.end('Worked');
+  models.insertHouse(req.body, (err, results) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).send('Successful');
+    }
+  });
 });
 
-app.post('/api/users', (req, res) => {
-  models.saveUser(req.body.name);
-  res.end('Worked');
-});
-
-app.put('/api/users/:house', (req, res) => {
-  models.saveHotelToUser(req.body.name, req.params.house, req.body.totalPrice);
-  res.end('worked');
-});
 
 app.delete('/api/houses/:id', (req, res) => {
   models.deleteHouse(req.params.id, (err) => {
